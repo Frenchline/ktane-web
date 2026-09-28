@@ -90,10 +90,7 @@ net.on('players', (m) => renderPlayers(m.players));
 
 net.on('error', (m) => { $('lobby-err').textContent = m.msg; });
 
-net.on('started', (m) => {
-  showGameView();
-  startVoice();
-});
+net.on('started', () => showGameView());
 
 function showGameView() {
   $('lobby').classList.add('hidden');
@@ -124,7 +121,17 @@ net.on('bomb', async (m) => {
   flashPrompt('Glissez pour tourner autour de la bombe · cliquez un module pour zoomer · Échap pour reculer', 7000);
 });
 
-net.on('module', (m) => scene?.updateModule(m.i, m.m));
+net.on('module', (m) => {
+  scene?.updateModule(m.i, m.m);
+  // alerte quand le condensateur (demandant) s'active
+  if (m.m.type === 'capacitor') {
+    if (m.m.active && !capActive) {
+      flashPrompt('⚠️ Le condensateur se charge ! Maintenez son levier jusqu\'à la décharge.', 4000);
+      sfx.click();
+    }
+    capActive = m.m.active;
+  }
+});
 
 net.on('tick', (m) => {
   lastTime = m.timeLeftMs;
@@ -176,11 +183,13 @@ net.on('ended', (m) => {
   sfx.stopRadio();
   sfx.stopAlarmClock();
   voice?.stop();
+  voice = null;
 });
 
 net.on('peer-left', (m) => flashPrompt(`${m.name} a quitté la partie`));
 
 let lastTime = 0;
+let capActive = false;
 
 function renderPlayers(players) {
   $('players').innerHTML = players.map(p =>
@@ -197,10 +206,13 @@ function flashPrompt(text, ms = 2500) {
 }
 
 async function startVoice() {
+  if (voice) return;
   voice = new Voice(net, myRole === 'defuser'); // le désamorceur initie l'offre
   voice.onStatus = (s) => {
-    $('hud-voice').textContent = s === 'ok' ? '🎙️ vocal OK' : s === 'off' ? '🎙️ indisponible' : '🎙️ connexion…';
-    $('hud-voice').className = s === 'ok' ? 'ok' : s === 'off' ? 'off' : '';
+    $('hud-voice').textContent = s === 'ok' ? '🎙️ vocal OK'
+      : s === 'failed' ? '🎙️ échec (NAT trop restrictif)'
+      : s === 'off' ? '🎙️ indisponible' : '🎙️ connexion…';
+    $('hud-voice').className = s === 'ok' ? 'ok' : (s === 'off' || s === 'failed') ? 'off' : '';
   };
   if (!(await voice.start())) {
     $('hud-voice').textContent = '🎙️ refusé (HTTPS requis hors localhost)';

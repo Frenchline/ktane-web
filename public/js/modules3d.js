@@ -197,7 +197,7 @@ export function buildSimon(mod, send) {
     );
     pad.rotation.x = Math.PI / 2;
     pad.position.set(x, y, 0.08);
-    pad.userData = { action: () => send({ a: 'press', color: name }) };
+    pad.userData = { action: () => send({ a: 'press', color: name }), flashColor: colors[name] };
     p.add(pad);
     pads[name] = pad;
     meshes.push(pad);

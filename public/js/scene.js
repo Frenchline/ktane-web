@@ -650,8 +650,14 @@ export class BombScene {
       anim.t += 1 / 60;
       const idx = Math.floor(anim.t / 0.6);
       const on = anim.t % 0.6 < 0.3;
-      for (const p of Object.values(pads)) p.material.emissive.set(0x000000);
-      if (idx < anim.seq.length && on) pads[anim.seq[idx]]?.material.emissive.set(0xffffff);
+      for (const p of Object.values(pads)) p.material.emissiveIntensity = 0;
+      if (idx < anim.seq.length && on) {
+        const pad = pads[anim.seq[idx]];
+        if (pad) {
+          pad.material.emissive.setHex(pad.userData.flashColor); // flash coloré
+          pad.material.emissiveIntensity = 1.6;
+        }
+      }
       if (idx >= anim.seq.length + 3) anim.t = 0; // pause puis boucle
     }
     this.renderer.render(this.scene, this.camera);

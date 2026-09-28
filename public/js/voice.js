@@ -25,7 +25,13 @@ export class Voice {
       return false;
     }
     this.pc = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        // TURN public (nécessaire entre deux réseaux différents, ex. 4G ↔ box)
+        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' },
+      ],
     });
     this.stream.getTracks().forEach(t => this.pc.addTrack(t, this.stream));
     this.pc.ontrack = (e) => { this.remoteStream = e.streams[0]; this._route(); };
@@ -34,7 +40,11 @@ export class Voice {
     };
     this.pc.onconnectionstatechange = () => {
       const s = this.pc.connectionState;
-      this.onStatus?.(s === 'connected' ? 'ok' : s === 'failed' ? 'off' : 'wait');
+      this.onStatus?.(s === 'connected' ? 'ok' : s === 'failed' ? 'failed' : 'wait');
+    };
+    this.pc.oniceconnectionstatechange = () => {
+      if (this.pc.iceConnectionState === 'failed') this.onStatus?.('failed');
+      if (this.pc.iceConnectionState === 'disconnected') this.onStatus?.('wait');
     };
     if (this.isInitiator) {
       const offer = await this.pc.createOffer();
