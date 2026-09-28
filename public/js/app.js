@@ -136,12 +136,22 @@ net.on('module', (m) => {
 net.on('tick', (m) => {
   lastTime = m.timeLeftMs;
   scene?.updateTimer(m.timeLeftMs, m.strikes, m.maxStrikes);
+  updateExpertStrikes(m.strikes, m.maxStrikes);
 });
 
 net.on('strike', (m) => {
   scene?.updateTimer(lastTime, m.strikes, m.maxStrikes);
+  updateExpertStrikes(m.strikes, m.maxStrikes);
   flashPrompt(`❌ Erreur ! (${m.reason})`);
 });
+
+// l'expert DOIT connaître le nombre d'erreurs (table Simon)
+function updateExpertStrikes(strikes, maxStrikes) {
+  if (myRole === 'expert') {
+    $('expert-strikes').textContent = `✕ Erreurs : ${strikes}/${maxStrikes}`;
+    $('expert-strikes').style.color = strikes ? '#ff5555' : '#7fb3ff';
+  }
+}
 
 net.on('effect', (m) => { scene?.setEffect(m.effect); applyAudioEffect(m.effect); });
 net.on('effect-end', () => { scene?.setEffect(null); applyAudioEffect(null); });

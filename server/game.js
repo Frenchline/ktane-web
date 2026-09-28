@@ -332,7 +332,7 @@ export class Room {
         } else if (msg.a === 'release') {
           m.holding = false;
           const heldMs = msg.heldMs ?? 1000;
-          if (heldMs < 300) {
+          if (heldMs < 750) {
             // appui bref = « presser et relâcher immédiatement »
             if (sol === 'tap') { m.solved = true; pub(); this.checkDefused(); }
             else { pub(); this.strike('le bouton devait être maintenu'); }

@@ -38,7 +38,7 @@ export function serialIsOdd(serial) {
   return parseInt(serial.slice(-1), 10) % 2 === 1;
 }
 export function serialHasVowel(serial) {
-  return /[AEIOUY]/.test(serial);
+  return /[AEIOU]/.test(serial); // Y n'est PAS une voyelle dans KTANE
 }
 
 // ---------- génération ----------
@@ -189,18 +189,19 @@ export function memoryRule(stageIdx, display, history) {
 
 // ---------- génération des widgets de la bombe ----------
 
-const SERIAL_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+// lettres lisibles sans ambiguïté chiffre/lettre : pas de I (1), O (0), Q (O)
+const SERIAL_LETTERS = 'ABCDEFGHJKLMNPRSTUVWXYZ';
 const INDICATOR_LABELS = ['SND', 'CLR', 'CAR', 'IND', 'FRQ', 'SIG', 'NSA', 'MSA', 'TRN', 'BOB', 'FRK'];
 const PORT_TYPES = ['DVI-D', 'Parallel', 'PS2', 'RJ-45', 'Serial', 'StereoRCA'];
 
 export function generateSerial(rng) {
-  // format KTANE : 2 lettres, 2 chiffres/lettres, lettre, chiffre final
+  // format L L D L L D : lettres et chiffres à positions fixes → aucune ambiguïté
   let s = '';
   s += rng.pick([...SERIAL_LETTERS]);
   s += rng.pick([...SERIAL_LETTERS]);
   s += rng.int(0, 9);
   s += rng.pick([...SERIAL_LETTERS]);
-  s += rng.pick([...SERIAL_LETTERS, ...'0123456789']);
+  s += rng.pick([...SERIAL_LETTERS]);
   s += rng.int(0, 9);
   return s;
 }

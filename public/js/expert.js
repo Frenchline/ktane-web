@@ -85,7 +85,7 @@ const SECTIONS = {
     html: `
       <h3>À propos du Simon</h3>
       <p>Un bouton s'allume ; appuyer sur le bouton correspondant selon la table. La séquence s'allonge à chaque réussite jusqu'au désarmement.</p>
-      <p><b>Si le n° de série contient une voyelle :</b></p>
+      <p><b>Si le n° de série contient une voyelle</b> (A, E, I, O, U — le Y n'est <b>pas</b> une voyelle) :</p>
       <table><tr><th>Erreurs</th><th>Flash rouge</th><th>Flash bleu</th><th>Flash vert</th><th>Flash jaune</th></tr>
       <tr><td>0</td><td>Bleu</td><td>Rouge</td><td>Jaune</td><td>Vert</td></tr>
       <tr><td>1</td><td>Jaune</td><td>Vert</td><td>Bleu</td><td>Rouge</td></tr>
