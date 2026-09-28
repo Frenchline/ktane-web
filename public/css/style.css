@@ -1,0 +1,118 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #14161c;
+  color: #e8e8e8;
+  height: 100vh;
+  overflow: hidden;
+}
+.hidden { display: none !important; }
+.screen { height: 100vh; overflow-y: auto; }
+
+/* ---- lobby ---- */
+#lobby { display: flex; flex-direction: column; align-items: center; padding: 4vh 1rem; }
+#lobby h1 { font-size: 2.4rem; margin-bottom: .3rem; }
+#lobby .sub { color: #9aa; margin-bottom: 1.5rem; }
+.card {
+  background: #1d2029; border: 1px solid #2c3140; border-radius: 12px;
+  padding: 1.4rem; width: min(420px, 92vw); margin-bottom: 1rem;
+  display: flex; flex-direction: column; gap: .8rem;
+}
+.card label { display: flex; flex-direction: column; gap: .3rem; font-size: .85rem; color: #aab; }
+input, select {
+  background: #12141a; border: 1px solid #3a4055; color: #eee;
+  padding: .55rem .7rem; border-radius: 7px; font-size: 1rem;
+}
+button {
+  background: #c0392b; color: #fff; border: 0; border-radius: 7px;
+  padding: .65rem 1rem; font-size: 1rem; cursor: pointer; font-weight: 600;
+}
+button:hover { background: #e74c3c; }
+.err { color: #ff6b6b; font-size: .85rem; min-height: 1em; }
+.hint { font-size: .8rem; color: #889; }
+#players { list-style: none; }
+#players li { padding: .3rem 0; }
+#players .role { color: #7fb3ff; font-size: .8rem; margin-left: .5rem; }
+
+/* ---- HUD ---- */
+#hud {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  display: flex; align-items: center; gap: 1rem;
+  background: rgba(10,12,16,.85); padding: .45rem 1rem; font-size: .9rem;
+  border-bottom: 1px solid #2c3140;
+}
+#hud button { padding: .25rem .7rem; font-size: .8rem; background: #333a4d; }
+#hud button:hover { background: #455; }
+#quit { margin-left: auto; }
+#hud-voice.ok { color: #6f6; }
+#hud-voice.off { color: #f66; }
+
+/* ---- désamorceur ---- */
+#defuser-view { position: fixed; inset: 0; }
+#scene { display: block; width: 100%; height: 100%; touch-action: none; }
+#rotate-hint {
+  position: fixed; inset: 0; z-index: 40;
+  background: rgba(10,12,16,.92); color: #ffd166;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; text-align: center; padding: 2rem;
+}
+#prompt {
+  position: fixed; bottom: 8vh; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,.7); padding: .7rem 1.4rem; border-radius: 8px;
+  font-size: 1.1rem; pointer-events: none;
+}
+#zoom-out {
+  position: fixed; bottom: 3vh; left: 3vw; background: #333a4d;
+}
+#effect-banner {
+  position: fixed; top: 20%; left: 50%; transform: translateX(-50%);
+  background: rgba(180,30,30,.85); padding: .8rem 2rem; border-radius: 10px;
+  font-size: 1.3rem; font-weight: bold; pointer-events: none; z-index: 15;
+}
+#flash-overlay {
+  position: fixed; inset: 0; background: #fff; opacity: 0;
+  pointer-events: none; z-index: 30;
+}
+
+/* ---- expert ---- */
+#expert-view { padding: 3.6rem 1rem 2rem; max-width: 980px; margin: 0 auto; height: 100vh; overflow-y: auto; }
+.expert-top { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+#expert-status { color: #7fb3ff; }
+.pdflink { margin-left: auto; color: #ffd166; }
+#manual-nav { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0; }
+#manual-nav button { background: #2a2f3d; font-size: .8rem; padding: .35rem .7rem; }
+#manual-nav button.active { background: #c0392b; }
+#manual-content { background: #f5f0e1; color: #222; border-radius: 10px; padding: 1.5rem 2rem; font-size: .95rem; }
+#manual-content h3 { margin-bottom: .8rem; }
+#manual-content p, #manual-content li { margin-bottom: .5rem; }
+#manual-content ul, #manual-content ol { padding-left: 1.3rem; }
+#manual-content table { border-collapse: collapse; margin: .6rem 0; }
+#manual-content td, #manual-content th { border: 1px solid #999; padding: .25rem .55rem; text-align: left; }
+#manual-content img.sym { width: 34px; height: 34px; vertical-align: middle; background: #fff; border: 1px solid #ccc; }
+#manual-content img.port { width: 90px; vertical-align: middle; background:#fff; }
+.led { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:4px; }
+.led.on { background:#2ecc71; } .led.off { background:#555; }
+
+/* ---- mobile paysage ---- */
+@media (max-height: 500px) {
+  #hud { padding: .25rem .6rem; font-size: .78rem; gap: .5rem; }
+  #hud button { padding: .2rem .5rem; font-size: .72rem; }
+  #zoom-out { bottom: 2vh; left: 2vw; padding: .4rem .8rem; }
+  #effect-banner { font-size: 1rem; padding: .5rem 1.2rem; top: 12%; }
+  #prompt { bottom: 4vh; font-size: .95rem; }
+  #expert-view { padding-top: 3rem; }
+  #manual-content { padding: 1rem; font-size: .85rem; }
+  #manual-content img.sym { width: 26px; height: 26px; }
+}
+
+/* ---- fin ---- */
+#end-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75);
+  display: flex; align-items: center; justify-content: center; z-index: 30;
+}
+.end-card { background: #1d2029; border-radius: 14px; padding: 2.5rem 3rem; text-align: center; }
+.end-card h2 { font-size: 2rem; margin-bottom: .5rem; }
+.end-card.win h2 { color: #2ecc71; }
+.end-card.lose h2 { color: #e74c3c; }
+.end-card button { margin: .5rem .3rem 0; }
+#to-lobby { background: #333a4d; }

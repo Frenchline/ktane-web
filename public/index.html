@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keep Talking — Bombe Web</title>
+<link rel="stylesheet" href="/css/style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "/vendor/three/build/three.module.js",
+    "three/addons/": "/vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- ============ LOBBY ============ -->
+<div id="lobby" class="screen">
+  <h1>💣 Keep Talking</h1>
+  <p class="sub">Désamorçage coopératif — un écran pour la bombe, un manuel pour l'expert.</p>
+
+  <div class="card">
+    <label>Votre pseudo <input id="name" maxlength="20" placeholder="ex. Yoann"></label>
+    <label>Code de la salle <input id="room" maxlength="8" placeholder="ex. BOMBE" style="text-transform:uppercase"></label>
+    <label>Rôle
+      <select id="role">
+        <option value="">Automatique</option>
+        <option value="defuser">Désamorceur (voit la bombe)</option>
+        <option value="expert">Expert (lit le manuel)</option>
+      </select>
+    </label>
+    <button id="join">Rejoindre</button>
+    <p id="lobby-err" class="err"></p>
+    <p id="lan-info" class="hint"></p>
+  </div>
+
+  <div id="room-panel" class="card hidden">
+    <h2>Salle <span id="room-code"></span></h2>
+    <ul id="players"></ul>
+    <p class="hint">Partagez le code de la salle à votre partenaire. 2 joueurs max.</p>
+
+    <div id="config">
+      <h3>Configuration de la bombe</h3>
+      <label>Preset
+        <select id="preset">
+          <option value="facile">Facile — 3 modules, 5 min</option>
+          <option value="normal" selected>Normal — 5 modules, 5 min</option>
+          <option value="difficile">Difficile — 8 modules, 4 min, 2 erreurs</option>
+          <option value="expert">Expert — 11 modules, 5 min, 1 erreur</option>
+          <option value="custom">Personnalisé…</option>
+        </select>
+      </label>
+      <div id="custom" class="hidden">
+        <label>Modules <input id="c-modules" type="number" min="1" max="11" value="5"></label>
+        <label>Temps (s) <input id="c-time" type="number" min="30" max="3600" value="300"></label>
+        <label>Erreurs max <input id="c-strikes" type="number" min="1" max="5" value="3"></label>
+        <label><input id="c-needy" type="checkbox" checked> Module demandant</label>
+        <label><input id="c-effects" type="checkbox" checked> Effets de panique</label>
+      </div>
+      <label>Seed <input id="seed" placeholder="(aléatoire si vide)"></label>
+      <button id="start">Lancer la bombe</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ JEU ============ -->
+<div id="game" class="screen hidden">
+  <!-- HUD commun -->
+  <div id="hud">
+    <span id="hud-room"></span>
+    <span id="hud-role"></span>
+    <span id="hud-voice">🎙️ …</span>
+    <button id="mute">Mute</button>
+    <button id="fullscreen">⛶ Plein écran</button>
+    <button id="quit">Quitter</button>
+  </div>
+
+  <!-- Vue désamorceur -->
+  <div id="defuser-view" class="hidden">
+    <canvas id="scene"></canvas>
+    <div id="prompt" class="hidden"></div>
+    <div id="rotate-hint" class="hidden">📱 Tournez le téléphone en mode paysage</div>
+    <button id="zoom-out" class="hidden">⟵ Reculer</button>
+    <div id="effect-banner" class="hidden"></div>
+    <div id="flash-overlay" class="hidden"></div>
+  </div>
+
+  <!-- Vue expert -->
+  <div id="expert-view" class="hidden">
+    <div class="expert-top">
+      <h2>Manuel de désamorçage</h2>
+      <span id="expert-status">En attente du lancement…</span>
+      <a href="/manuel.pdf" target="_blank" class="pdflink">📄 Ouvrir le PDF original</a>
+    </div>
+    <nav id="manual-nav"></nav>
+    <div id="manual-content"></div>
+  </div>
+
+  <!-- Fin de partie -->
+  <div id="end-overlay" class="hidden">
+    <div class="end-card">
+      <h2 id="end-title"></h2>
+      <p id="end-reason"></p>
+      <button id="again">Rejouer</button>
+      <button id="to-lobby">Retour au lobby</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

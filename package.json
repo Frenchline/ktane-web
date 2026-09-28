@@ -1,0 +1,19 @@
+{
+  "name": "ktane-web",
+  "version": "0.1.0",
+  "description": "Keep Talking and Nobody Explodes - version web cooperative",
+  "type": "module",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "ws": "^8.18.0",
+    "three": "^0.170.0"
+  }
+}
